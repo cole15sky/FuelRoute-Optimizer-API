@@ -1,0 +1,42 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+
+# Django
+
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+
+# Environment Variables
+
+.env
+.env.*
+
+# Logs
+
+*.log
+logs/
+
+# Coverage / Testing
+
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.tox/
+.vscode/
+.DS_Store
+
+
+# Cache
+
+.cache/
+*.cache
