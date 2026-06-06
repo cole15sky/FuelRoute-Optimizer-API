@@ -27,6 +27,10 @@ class Trip(models.Model):
         null=True,
         blank=True
     )
+    route_geometry = models.JSONField(
+        null=True,
+         blank=True
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True
