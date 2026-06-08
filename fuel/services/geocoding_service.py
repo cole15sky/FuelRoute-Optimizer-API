@@ -4,12 +4,10 @@ import requests
 class GeocodingService:
 
     BASE_URL = "https://nominatim.openstreetmap.org/search"
+    backup_url = "https://api.opencagedata.com/geocode/v1/json"
 
     @classmethod
     def geocode(cls, location):
-
-        if not location:
-            return None
 
         try:
             response = requests.get(
@@ -17,12 +15,14 @@ class GeocodingService:
                 params={
                     "q": location,
                     "format": "json",
-                    "limit": 1
+                    "limit": 1,
                 },
                 headers={
-                    "User-Agent": "FuelRouteOptimizer/1.0"
+                    # 🔥 REQUIRED: real identity
+                    "User-Agent": "FuelRouteOptimizer/1.0 (student project - contact: your_email@example.com)",
+                    "Accept-Language": "en",
                 },
-                timeout=10
+                timeout=20,
             )
 
             response.raise_for_status()
@@ -37,5 +37,10 @@ class GeocodingService:
                 "lon": float(data[0]["lon"]),
             }
 
-        except (requests.exceptions.RequestException, ValueError):
+        except requests.exceptions.HTTPError as e:
+            print("Geocoding HTTP error:", e)
+            return None
+
+        except Exception as e:
+            print("Geocoding error:", e)
             return None
