@@ -1,7 +1,12 @@
-
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
+
+ORS_API_KEY = os.getenv("ORS_API_KEY")
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
