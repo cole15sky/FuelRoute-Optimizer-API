@@ -11,7 +11,15 @@ class FuelOptimizer:
         self.stations = stations
 
     def distance(self, a, b):
-        # rough conversion lat/lon → miles
+        if not a or not b:
+            return float("inf")
+
+        if len(a) != 2 or len(b) != 2:
+            return float("inf")
+
+        if None in a or None in b:
+            return float("inf")
+
         return dist(a, b) * 69
 
     def find_stations_near_point(self, point, radius=50):

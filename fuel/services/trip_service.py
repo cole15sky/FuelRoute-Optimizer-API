@@ -12,24 +12,18 @@ class TripService:
         start_location,
         destination_location,
     ):
-        start = GeocodingService.geocode(
-            start_location
-        )
+        # GEOCODING
+        start = GeocodingService.geocode(start_location)
 
         if not start:
-            raise ValueError(
-                "Invalid start location"
-            )
+            raise ValueError("Invalid start location")
 
-        destination = GeocodingService.geocode(
-            destination_location
-        )
+        destination = GeocodingService.geocode(destination_location)
 
         if not destination:
-            raise ValueError(
-                "Invalid destination location"
-            )
+            raise ValueError("Invalid destination location")
 
+        # ROUTE FETCH
         route_response = RouteService.get_route(
             start["lon"],
             start["lat"],
@@ -37,48 +31,42 @@ class TripService:
             destination["lat"],
         )
 
-        route_data = RouteService.extract_route(
-            route_response
-        )
+        route_data = RouteService.extract_route(route_response)
 
-        distance_miles = (
-            route_data["distance_m"] / 1609.34
-        )
+        distance_miles = route_data["distance_m"] / 1609.34
+        duration_hours = route_data["duration_s"] / 3600
 
-        duration_hours = (
-            route_data["duration_s"] / 3600
-        )
-
-        # FUEL LOGIC 
-
-        # simple route points for fuel stop generation
+        # ROUTE POINTS (for fuel logic)
         route_points = [
             (start["lat"], start["lon"]),
-            (destination["lat"], destination["lon"])
+            (destination["lat"], destination["lon"]),
         ]
 
+        # FUEL OPTIMIZATION
         stations = StationFinder.get_cheapest_stations()
         optimizer = FuelOptimizer(route_points, stations)
         fuel_stops = optimizer.generate_fuel_stops()
 
+        # COST CALCULATION
         MPG = 10
-
         gallons = distance_miles / MPG
 
-        avg_price = (
-            sum(s["price"] for s in fuel_stops) / len(fuel_stops)
-            if fuel_stops else 0
-        )
+        if fuel_stops:
+            avg_price = sum(
+                s["price"] for s in fuel_stops
+            ) / len(fuel_stops)
+        else:
+            avg_price = 0
 
         total_cost = gallons * avg_price if avg_price else 0
 
+        # FINAL RESPONSE
         return {
             "start": start_location,
             "destination": destination_location,
             "distance_miles": round(distance_miles, 2),
             "duration_hours": round(duration_hours, 2),
 
-            # REQUIRED OUTPUTS
             "fuel_stops": fuel_stops,
             "total_fuel_cost": round(total_cost, 2),
         }
