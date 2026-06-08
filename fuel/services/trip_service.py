@@ -16,12 +16,20 @@ class TripService:
         start = GeocodingService.geocode(start_location)
 
         if not start:
-            raise ValueError("Invalid start location")
-
+            return {
+                "error" : "Unable to geocode start location",
+                "location": start_location
+            }
+            
+            raise ValueError(f"Could not geocode start location: {start_location}")            
         destination = GeocodingService.geocode(destination_location)
 
         if not destination:
-            raise ValueError("Invalid destination location")
+            return {
+                "error" : "Unable to geocode destination location",
+                "location": destination_location
+            }
+            raise ValueError(f"Could not geocode destination location: {destination_location}")
 
         # ROUTE FETCH
         route_response = RouteService.get_route(
