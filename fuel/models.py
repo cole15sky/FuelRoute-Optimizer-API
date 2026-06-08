@@ -51,6 +51,14 @@ class FuelStation(models.Model):
         auto_now=True
     )
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["state"]),
+            models.Index(fields=["city"]),
+            models.Index(fields=["retail_price"]),
+        ]
+
+
     def __str__(self):
         return (
             f"{self.truckstop_name} "
