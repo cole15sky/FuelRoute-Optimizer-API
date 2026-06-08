@@ -315,18 +315,6 @@ Fuel Efficiency = 10 MPG
 
 ---
 
-## Future Improvements
-
-* Redis caching
-* PostGIS integration
-* Advanced graph-based optimization
-* Dijkstra shortest-cost algorithm
-* Multi-vehicle support
-* Live fuel price updates
-* Route history and analytics
-
----
-
 ## Assessment Objectives
 
 This project demonstrates:
