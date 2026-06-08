@@ -16,11 +16,11 @@ class RouteService:
         end_lon,
         end_lat,
     ):
-
         headers = {
             "Authorization": settings.ORS_API_KEY,
             "Content-Type": "application/json",
         }
+        
 
         payload = {
             "coordinates": [
@@ -36,6 +36,20 @@ class RouteService:
             timeout=30,
         )
 
+
+
         response.raise_for_status()
 
         return response.json()
+
+    @staticmethod
+    def extract_route(route_response):
+
+        route = route_response["routes"][0]
+        summary = route["summary"]
+
+        return {
+        "distance_m": summary["distance"],
+        "duration_s": summary["duration"],
+        "geometry": route["geometry"],
+        }
