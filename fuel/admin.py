@@ -1,3 +1,20 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import FuelStation
+
+
+@admin.register(FuelStation)
+class FuelStationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "truckstop_name",
+        "city",
+        "state",
+        "retail_price",
+    )
+
+    search_fields = (
+        "truckstop_name",
+        "city",
+        "state",
+    )
